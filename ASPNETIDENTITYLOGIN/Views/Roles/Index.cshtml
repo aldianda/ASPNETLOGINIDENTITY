@@ -7,6 +7,7 @@
 <hr />
 <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="ClearScreen();">Create New</button>
 <hr />
+
 <table id="table">
     <thead>
         <tr>
@@ -31,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <label for="Name">Name</label>
-                    <input type="text" id="roleNameText" class="form-control" placeholder="Name">
+                    <input type="text" id="RoleNameText" class="form-control" placeholder="Name">
                 </div>
             </div>
             <div class="modal-footer">
@@ -73,7 +74,6 @@
         });
         function Delete(Id) {
             debugger;
-            window.alert(Id);
         }
         function Edit(Id) {
 
@@ -81,9 +81,9 @@
         function Save() {
             debugger
             var role = new Object();
-            role.Name = $("#roleNameText").val();
+            role.Name = $("#RoleNameText").val();
             $.ajax({
-                "url": "/Roles/Create",
+                "url": "/Roles/Create/",
                 "type": "POST",
                 "dataType": "json",
                 "data": role
@@ -107,18 +107,18 @@
         }
         function ClearScreen() {
             document.getElementById("RoleIdText").disabled = true;
-            $("#roleNameText").val('');
+            $("#RoleNameText").val('');
             $("#Update").hide();
         }
         function Validation() {
-            if ($("#roleNameText").val() == "1" || $("#roleNameText").val == " ") {
+            if ($("#RoleNameText").val() == "1" || $("#RoleNameText").val == " ") {
                 Swal.fire('any fool can use a computer');
             }
-            else if ($("#roleIdText").val() == "" || $("#roleIdText").val == " ") {
+            else if ($("#RoleIdText").val() == "" || $("#RoleIdText").val == " ") {
                 Save();
             }
             else {
-                Edit($("#roleIdText").val());
+                Edit($("#RoleIdText").val());
             }
         }
     </script>
