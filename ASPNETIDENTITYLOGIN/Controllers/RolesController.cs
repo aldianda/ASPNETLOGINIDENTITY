@@ -29,5 +29,16 @@ namespace ASPNETIDENTITYLOGIN.Controllers
             var affectedRows = await sqlConnection.ExecuteAsync("EXEC SP_InsertRole @Name", new { Name = roleVM.Name });
             return Json(new { data = affectedRows }, JsonRequestBehavior.AllowGet);
         }
+        public async Task<ActionResult> Remove(RoleVM roleVM)
+        {
+            var affectedRows = await sqlConnection.ExecuteAsync("EXEC SP_DeleteRole @Id", new { Id = roleVM.Id });
+            return Json(new { data = affectedRows }, JsonRequestBehavior.AllowGet);
+        }
+        public async Task<ActionResult> Update(RoleVM roleVM)
+        {
+            var affectedRows = await sqlConnection.ExecuteAsync("EXEC SP_UpdateRole @Name, @Id", new { Name = roleVM.Name, Id = roleVM.Id });
+            return Json(new { data = affectedRows }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

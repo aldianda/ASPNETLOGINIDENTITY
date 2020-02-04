@@ -8,7 +8,7 @@
 <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="ClearScreen();">Create New</button>
 <hr />
 
-<table id="table">
+<table id="table" class="table-responsive">
     <thead>
         <tr>
             <th>Name</th>
@@ -61,12 +61,7 @@
                     { "data": "Name" },
                     {
                         "render": function (data, type, row, meta) {
-                            return "<button class='btn btn-warning' onclick=GetById('" + row.Id + "');>edit</button>";
-                        }
-                    },
-                    {
-                        "render": function (data, type, row) {
-                            return "<button class='btn btn-danger' onclick=Delete('" + row.Id + "');>Delete</button>";
+                            return "<button class='btn btn-warning' onclick=GetById('" + row.Id + "');>edit</button> <button class='btn btn-danger' onclick=Delete('" + row.Id + "');>Delete</button>";
                         }
                     }
                 ]
@@ -74,9 +69,68 @@
         });
         function Delete(Id) {
             debugger;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                debugger;
+                if (result.value) {
+                    $.ajax({
+                        "url": "/Roles/Remove/",
+                        "datatype": "json",
+                        "data": { Id: Id }
+                    }).then((result) => {
+                        debugger;
+                        if (result.data[0] != 0) {
+                            Swal.fire(
+                                'Success!',
+                                'Your file has been deleted.',
+                                'success')
+                        }
+                        else {
+                            Swal.fire(
+                                'Failed!',
+                                'Your Data Not Deleted',
+                                'failed'
+                            )
+                        }
+                        $("#myModal").modal('hide');
+                        })
+                    location.reload();
+                }
+            })
         }
         function Edit(Id) {
-
+            var role = new Object();
+            role.Id = $("#RoleIdText").val();
+            role.Name = $("#RoleNameText").val();
+            $.ajax({
+                "url": "/Roles/Update/",
+                "type": "POST",
+                "dataType": "json",
+                "data": { Id: role.Id, Name: role.Name }
+            }).then((result) => {
+                if (result.data[0] != 0) {
+                    Swal.fire(
+                        'success!',
+                        'Your file has been Updated.',
+                        'success')
+                }
+                else {
+                    Swal.fire(
+                        'Failed!',
+                        'Your file has not Updated.',
+                        'Failed'
+                    )
+                }
+                $("#myModal").modal("hide");
+                location.reload();
+            })
         }
         function Save() {
             debugger
@@ -103,6 +157,8 @@
                         'Failed'
                         )
                 }
+                $("#myModal").modal("hide");
+                location.reload();
             })
         }
         function ClearScreen() {
@@ -111,7 +167,7 @@
             $("#Update").hide();
         }
         function Validation() {
-            if ($("#RoleNameText").val() == "1" || $("#RoleNameText").val == " ") {
+            if ($("#RoleNameText").val() == "" || $("#RoleNameText").val == " ") {
                 Swal.fire('any fool can use a computer');
             }
             else if ($("#RoleIdText").val() == "" || $("#RoleIdText").val == " ") {
